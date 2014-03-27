@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import sys
 sys.path.append("gen-py")
@@ -10,29 +10,32 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
 from demo import MathService
-from demo.ttypes import *
+# from demo.ttypes import *
 
-# Make Socket
-# 建立socket, IP 和port要写对
-transport = TSocket.TSocket('localhost', 9900)
+try:
+    # Make Socket
+    # 建立socket, IP 和port要写对
+    transport = TSocket.TSocket('localhost', 9900)
 
-# Buffering is critical. Raw sockets are very slow
-# 选择传输层，这块要和服务器的设置一样
-transport = TTransport.TBufferedTransport(transport)
+    # Buffering is critical. Raw sockets are very slow
+    # 选择传输层，这块要和服务器的设置一样
+    transport = TTransport.TBufferedTransport(transport)
 
-# Wrap in a protocol
-# 选择传输协议，这个也要和服务器保持一致，负责无法通信
-protocol = TBinaryProtocol.TBinaryProtocol(transport)
+    # Wrap in a protocol
+    # 选择传输协议，这个也要和服务器保持一致，负责无法通信
+    protocol = TBinaryProtocol.TBinaryProtocol(transport)
 
-# Create a client to use the protocol encoder
-client = MathService.Client(protocol)
+    # Create a client to use the protocol encoder
+    client = MathService.Client(protocol)
 
-# Connect!
-transport.open()
+    # Connect!
+    transport.open()
 
-# Call server services
-rst = client.add(1, 2)
-print rst
+    # Call server services
+    rst = client.add(1, 2)
+    print rst
 
-# close transport
-transport.close()
+    # close transport
+    transport.close()
+except Thrift.TException, ex:
+    print "%s" % (ex.message)
