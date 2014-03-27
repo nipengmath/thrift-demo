@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import sys
 sys.path.append('gen-py')
 
@@ -8,19 +9,27 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 from thrift.server import TServer
 
+from demo import MathService
+from demo.ttypes import *
 
-import demo.MathService
 
-
-class MathHandler(demo.MathService.Iface):
+class MathHandler(MathService.Iface):
     def add(self, a, b):
+        print "Receive: %s, %s" %(a, b)
         return a + b
+
 
 if __name__ == "__main__":
 
-    processor = demo.MathService.Processor(MathHandler())
+    # 实例化handler
+    handler = MathHandler()
+
+    # 设置processor
+    processor = MathService.Processor(handler)
+
     # 设置端口
-    transport = TSocket.TServerSocket(port=9900)
+    transport = TSocket.TServerSocket('localhost', port=9900)
+
     # 设置传输层
     tfactory = TTransport.TBufferedTransportFactory()
 
